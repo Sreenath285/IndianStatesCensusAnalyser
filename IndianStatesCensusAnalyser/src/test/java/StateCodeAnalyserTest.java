@@ -11,6 +11,7 @@ class StateCodeAnalyserTest {
     private static final String WRONG_CSV_FILE_PATH = "C:\\Users\\sreen\\Desktop\\Pgms\\IndianStatesCensusAnalyser\\src\\main\\resources\\IndiaStateCode.csv";
     private static final String WRONG_CENSUS_FILE_EXTENSION = "C:\\Users\\sreen\\Desktop\\Pgms\\IndianStatesCensusAnalyser\\src\\test\\resources\\IndiaStateCode.sh";
     private static final String STATE_CODE_CSV_FILE_WRONG_DELIMITER = "C:\\Users\\sreen\\Desktop\\Pgms\\IndianStatesCensusAnalyser\\src\\test\\resources\\WrongDelimiter.csv";
+    private static final String STATE_CODE_CSV_FILE_WRONG_HEADER = "C:\\Users\\sreen\\Desktop\\Pgms\\IndianStatesCensusAnalyser\\src\\test\\resources\\WrongHeader.csv";
 
     @Description("Given Indian State Code CSV file, Check to ensure the number of state code matches")
     @Test
@@ -37,7 +38,7 @@ class StateCodeAnalyserTest {
 
     @Description("Given the State Code CSV File with incorrect type, should return Custom Exception")
     @Test
-    void givenIndiaCensusData_WithWrongFileType_ShouldThrowException() {
+    void givenStateCodeData_WithWrongFileType_ShouldThrowException() {
         try {
             CensusAnalyser censusAnalyser = new CensusAnalyser();
             ExpectedException exceptionRule = ExpectedException.none();
@@ -50,12 +51,23 @@ class StateCodeAnalyserTest {
 
     @Description("Given the State Code CSV File when correct but delimiter incorrect Returns a custom Exception")
     @Test
-    void givenIndiaCensusData_WithWrongDelimiter_ShouldThrowException() {
+    void givenStateCodeData_WithWrongDelimiter_ShouldThrowException() {
         try {
             CensusAnalyser censusAnalyser = new CensusAnalyser();
             ExpectedException exceptionRule = ExpectedException.none();
             exceptionRule.expect(CensusAnalyserException.class);
             censusAnalyser.loadIndiaCensusData(STATE_CODE_CSV_FILE_WRONG_DELIMITER);
+        } catch (CensusAnalyserException e) {
+            Assert.assertEquals(CensusAnalyserException.ExceptionType.INVALID_HEADER_AND_DELIMITER, e.type);
+        }
+    }
+
+    @Description("Given the State Code CSV File when correct but header incorrect return custom exception")
+    @Test
+    void givenStateCodeData_WithWrongHeader_ShouldThrowException() {
+        try {
+            CensusAnalyser censusAnalyser = new CensusAnalyser();
+            censusAnalyser.loadIndiaCensusData(STATE_CODE_CSV_FILE_WRONG_HEADER);
         } catch (CensusAnalyserException e) {
             Assert.assertEquals(CensusAnalyserException.ExceptionType.INVALID_HEADER_AND_DELIMITER, e.type);
         }
